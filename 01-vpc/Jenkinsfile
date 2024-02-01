@@ -9,9 +9,9 @@ pipeline {
         // timeout(time: 1, unit: 'HOURS')
         // disableConcurrentBuilds()
     }
-    // parameters {
-    //     choice(name: 'action', choices: ['apply', 'destroy'], description: 'Pick something')
-    // }
+    parameters {
+        choice(name: 'action', choices: ['apply', 'destroy'], description: 'Pick something')
+    }
     // build
     stages {
         stage('Init') {
@@ -31,11 +31,11 @@ pipeline {
             }
         }
         stage('Deploy') {
-            // when {
-            //     expression { 
-            //         params.action == 'apply'
-            //     }
-            // }
+            when {
+                expression { 
+                    params.action == 'apply'
+                }
+            }
             input {
                 message "Should we continue?"
                 ok "Yes, we should."
@@ -47,23 +47,23 @@ pipeline {
                 """
             }
         }
-        // stage('Destroy') {
-        //     when {
-        //         expression { 
-        //             params.action == 'destroy'
-        //         }
-        //     }
-        //     input {
-        //         message "Should we continue?"
-        //         ok "Yes, we should."
-        //     }
-        //     steps {
-        //         sh """
-        //             cd 01-vpc
-        //             terraform destroy -auto-approve
-        //         """
-        //     }
-        // }
+        stage('Destroy') {
+            when {
+                expression { 
+                    params.action == 'destroy'
+                }
+            }
+            input {
+                message "Should we continue?"
+                ok "Yes, we should."
+            }
+            steps {
+                sh """
+                    cd 01-vpc
+                    terraform destroy -auto-approve
+                """
+            }
+        }
     }
     // post build
     post { 
